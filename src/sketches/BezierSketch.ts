@@ -1,7 +1,7 @@
 "use client";
-import { Size } from "aws-cdk-lib/core";
+// import { Size } from "aws-cdk-lib/core";
 import * as p5 from "p5";
-import { off } from "process";
+// import { off } from "process";
 
 
 // let cam: p5.MediaElement;

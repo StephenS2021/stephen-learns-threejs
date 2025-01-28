@@ -1,6 +1,6 @@
-import Image from "next/image";
+
 import P5Wrapper from "@/components/P5Wrapper";
-import BezierSketch from "@/sketches/BezierSketch";
+// import BezierSketch from "@/sketches/BezierSketch";
 import stripTerrainSketch from "@/sketches/stripTerrainSketch";
 export default function Home() {
   return (

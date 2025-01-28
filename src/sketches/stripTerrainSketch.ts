@@ -1,7 +1,7 @@
 "use client";
-import { Size } from "aws-cdk-lib/core";
+// import { Size } from "aws-cdk-lib/core";
 import * as p5 from "p5";
-import { off } from "process";
+// import { off } from "process";
 
 
 // let cam: p5.MediaElement;
@@ -14,19 +14,19 @@ import { off } from "process";
     the library automatically injects the `sketch` function with the p5 object required
 */
 const stripTerrainSketch = (p: p5) => {
-    let [width, height] = [1500, 900]
+    const [width, height] = [1500, 900]
     let cols:number; let rows:number;
-    let scl:number = 20; // scale
+    const scl:number = 20; // scale
     let xCamOffset: number;
     let yCamOffset: number;
-    let terrain: number[][] = [];
+    const terrain: number[][] = [];
 
     let xOff:number = 0;
     let yOff:number = 0;
     let flying:number = 0;
 
-    let perlinScale:number = 0.12; // how far apart the noise samples are (basically zooming out)
-    let mapScale:number = 130; // the max which the perlin noise can be scaled to by the map function
+    const perlinScale:number = 0.12; // how far apart the noise samples are (basically zooming out)
+    const mapScale:number = 130; // the max which the perlin noise can be scaled to by the map function
 
 
     p.setup = () => {
