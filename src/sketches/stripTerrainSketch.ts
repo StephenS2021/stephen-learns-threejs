@@ -62,10 +62,10 @@ const stripTerrainSketch = (p: p5) => {
             }
             yOff += perlinScale;
         }
-        p.background(200);
+        p.background(255);
         
         p.push();
-        p.rotateX(p.PI/3 + 0.25)
+        p.rotateX(p.PI/3 + 0.15)
         p.translate(xCamOffset, yCamOffset+150);
 
         p.normalMaterial()
@@ -97,6 +97,7 @@ const stripTerrainSketch = (p: p5) => {
             // Recenter the camera based on new window size
             xCamOffset = -(gridWidth / 2);
             yCamOffset = -(gridHeight / 2);
+
         };
 
     };
