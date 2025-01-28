@@ -39,14 +39,11 @@ const stripTerrainSketch = (p: p5) => {
         yCamOffset = -(gridHeight / 2);
 
 
-        for( let y = 0; y < rows; y++ ){
+        for (let y = 0; y < rows; y++) {
             terrain[y] = [];
-            xOff = 0;
-            for( let x = 0; x < cols; x++){
-                terrain[y][x] = p.map(p.noise(xOff, yOff), 0, 1, -mapScale, mapScale);
-                xOff += perlinScale;
+            for (let x = 0; x < cols; x++) {
+                terrain[y][x] = 0; // Initialize with zero
             }
-            yOff += perlinScale;
         }
         
     
@@ -56,7 +53,6 @@ const stripTerrainSketch = (p: p5) => {
         flying += -0.02;
         yOff = flying
         for( let y = 0; y < rows; y++ ){
-            terrain[y] = [];
             xOff = 0;
             for( let x = 0; x < cols; x++){
                 terrain[y][x] = p.map(p.noise(xOff, yOff), 0, 1, -mapScale, mapScale);
@@ -70,7 +66,7 @@ const stripTerrainSketch = (p: p5) => {
         p.rotateX(p.PI/3 + 0.25)
         p.translate(xCamOffset, yCamOffset+150);
 
-        p.specularMaterial(255,10,150)
+        p.normalMaterial()
         p.stroke(255);
         p.fill(0)
         
