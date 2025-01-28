@@ -14,7 +14,7 @@ import * as p5 from "p5";
     the library automatically injects the `sketch` function with the p5 object required
 */
 const BezierSketch = (p: p5) => {
-    let [width, height] = [400, 400]
+    const [width, height] = [400, 400]
 
     let offset:number = 0;
     let x1:number; let y1:number;
