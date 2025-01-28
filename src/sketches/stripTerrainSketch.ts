@@ -30,9 +30,11 @@ const stripTerrainSketch = (p: p5) => {
 
 
     p.setup = () => {
-        p.createCanvas(width, height, p.WEBGL);
-        cols = width / scl;
-        rows = height / scl;
+        p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+        // cols = width / scl;
+        // rows = height / scl;
+        cols = Math.floor(p.windowWidth / scl);
+        rows = Math.floor(p.windowHeight / scl);
         const gridWidth = cols * scl;
         const gridHeight = rows * scl;
         xCamOffset = -(gridWidth / 2); // TODO FIGURE OUT WHAT THSI IS DOING
@@ -81,6 +83,21 @@ const stripTerrainSketch = (p: p5) => {
             p.endShape();
         }
         p.pop();
+
+        p.windowResized = () => {
+            p.resizeCanvas(p.windowWidth, p.windowHeight);
+    
+            // Recalculate cols and rows for the new window size
+            cols = Math.floor(p.windowWidth / scl);
+            rows = Math.floor(p.windowHeight / scl);
+
+            const gridWidth = cols * scl;
+            const gridHeight = rows * scl;
+
+            // Recenter the camera based on new window size
+            xCamOffset = -(gridWidth / 2);
+            yCamOffset = -(gridHeight / 2);
+        };
 
     };
 };
