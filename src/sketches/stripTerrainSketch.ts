@@ -14,7 +14,7 @@ import * as p5 from "p5";
     the library automatically injects the `sketch` function with the p5 object required
 */
 const stripTerrainSketch = (p: p5) => {
-    const [width, height] = [1500, 900]
+    // const [width, height] = [1500, 900]
     let cols:number; let rows:number;
     const scl:number = 20; // scale
     let xCamOffset: number;
