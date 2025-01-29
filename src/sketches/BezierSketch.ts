@@ -52,3 +52,23 @@ const BezierSketch = (p: p5) => {
 };
 
 export default BezierSketch;
+
+
+
+
+//  // yOff = flying;
+//  for( let y = rows-1; y > 0; y-- ){
+//     // xOff = 0;
+//     for( let x = 0; x < cols; x++){
+//         terrain[y][x] = terrain[y-1][x];
+//         // xOff += perlinScale;
+//     }
+// }
+// // yOff = flying;
+
+// xOff = 0; 
+// for (let x = 0; x < cols; x++) {
+//     terrain[0][x] = p.map(p.noise(xOff, yOff), 0, 1, -mapScale, mapScale);
+//     xOff += perlinScale; // Update xOff as you move horizontally
+// }
+// yOff+= perlinScale;

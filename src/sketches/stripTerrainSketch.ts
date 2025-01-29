@@ -16,7 +16,7 @@ import * as p5 from "p5";
 const stripTerrainSketch = (p: p5) => {
     // const [width, height] = [1500, 900]
     let cols:number; let rows:number;
-    const scl:number = 20; // scale
+    const scl:number = 20; // controls how many vertices fit within the triangle strip by defining spacing between grid points
     let xCamOffset: number;
     let yCamOffset: number;
     const terrain: number[][] = [];
@@ -25,8 +25,10 @@ const stripTerrainSketch = (p: p5) => {
     let yOff:number = 0;
     let flying:number = 0;
 
-    const perlinScale:number = 0.12; // how far apart the noise samples are (basically zooming out)
+    const perlinScale:number = 0.12; // how far apart the noise samples are (basically zooming out or in)
     const mapScale:number = 130; // the max which the perlin noise can be scaled to by the map function
+
+    let graphics: p5.Graphics;
 
 
     p.setup = () => {
@@ -40,6 +42,8 @@ const stripTerrainSketch = (p: p5) => {
         xCamOffset = -(gridWidth / 2); // TODO FIGURE OUT WHAT THSI IS DOING
         yCamOffset = -(gridHeight / 2);
 
+        graphics = p.createGraphics(cols * scl, rows * scl, p.WEBGL); // create a graphics buffer
+
 
         for (let y = 0; y < rows; y++) {
             terrain[y] = [];
@@ -47,12 +51,11 @@ const stripTerrainSketch = (p: p5) => {
                 terrain[y][x] = 0; // Initialize with zero
             }
         }
-        
     
     };
 
-    p.draw = () => {
-        flying += -0.02;
+    const updateTerrain = () => {
+        flying -= 0.02;
         yOff = flying
         for( let y = 0; y < rows; y++ ){
             xOff = 0;
@@ -62,45 +65,60 @@ const stripTerrainSketch = (p: p5) => {
             }
             yOff += perlinScale;
         }
-        p.background(255);
-        
-        p.push();
-        p.rotateX(p.PI/3 + 0.15)
-        p.translate(xCamOffset, yCamOffset+150);
+    }
 
-        p.normalMaterial()
-        p.stroke(255);
-        p.fill(0)
+    const drawGraphicsBuffer = () => {
+        graphics.push();
+        graphics.clear()
+        graphics.rotateX(p.PI/3 + 0.15)
+        
+        graphics.translate(xCamOffset, yCamOffset+150);
+
+        graphics.normalMaterial()
+        graphics.stroke(255);
+        graphics.fill(0)
         
         for( let y = 0; y < rows-1; y++ ){
-            p.beginShape(p.TRIANGLE_STRIP);
+            graphics.beginShape(p.TRIANGLE_STRIP);
             for( let x = 0; x < cols; x++){
                 // p.rect(i*scl, j*scl, scl, scl);
-                p.vertex(x*scl, y*scl, terrain[y][x]);
-                p.vertex(x*scl, (y+1)*scl, terrain[y+1][x]);
+                graphics.vertex(x*scl, y*scl, terrain[y][x]);
+                graphics.vertex(x*scl, (y+1)*scl, terrain[y+1][x]);
 
             }
-            p.endShape();
+            graphics.endShape();
         }
-        p.pop();
+        graphics.pop();
+    }
 
-        p.windowResized = () => {
-            p.resizeCanvas(p.windowWidth, p.windowHeight);
-    
-            // Recalculate cols and rows for the new window size
-            cols = Math.floor(p.windowWidth / scl);
-            rows = Math.floor(p.windowHeight / scl);
-
-            const gridWidth = cols * scl;
-            const gridHeight = rows * scl;
-
-            // Recenter the camera based on new window size
-            xCamOffset = -(gridWidth / 2);
-            yCamOffset = -(gridHeight / 2);
-
-        };
-
+    p.draw = () => {
+        p.background(0);
+        console.log(p.frameRate())
+        updateTerrain();
+        drawGraphicsBuffer();
+        
+        
+        p.image(graphics, -p.width / 2, -p.height / 2);
     };
+
+    p.windowResized = () => {
+        p.resizeCanvas(p.windowWidth, p.windowHeight);
+
+        // Recalculate cols and rows for the new window size
+        cols = Math.floor(p.windowWidth / scl);
+        rows = Math.floor(p.windowHeight / scl);
+
+        const gridWidth = cols * scl;
+        const gridHeight = rows * scl;
+
+        // Recenter the camera based on new window size
+        xCamOffset = -(gridWidth / 2);
+        yCamOffset = -(gridHeight / 2);
+        graphics = p.createGraphics(cols * scl, rows * scl, p.WEBGL);
+        updateTerrain();
+        drawGraphicsBuffer();
+    };
+
 };
 
 export default stripTerrainSketch;
