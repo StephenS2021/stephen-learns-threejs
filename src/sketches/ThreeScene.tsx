@@ -165,7 +165,7 @@ const ThreeScene: React.FC = () => {
 
             // Cleanup function removes gui and canvas dom element
             return () => {
-                gui.destroy(); // Remove GUI on unmount
+                // gui.destroy(); // Remove GUI on unmount
                 canvasRef.current?.removeChild(renderer.domElement);
                 renderer.dispose();
             };
