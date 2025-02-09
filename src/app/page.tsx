@@ -1,7 +1,7 @@
 // import dynamic from "next/dynamic";
-import P5Wrapper from "@/components/P5Wrapper";
+// import P5Wrapper from "@/components/P5Wrapper";
 // import BezierSketch from "@/sketches/BezierSketch";
-import stripTerrainSketch from "@/sketches/stripTerrainSketch";
+// import stripTerrainSketch from "@/sketches/stripTerrainSketch";
 import ThreeScene from "@/sketches/ThreeScene";
 
 export default function Home() {
