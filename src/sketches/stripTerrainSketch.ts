@@ -1,6 +1,7 @@
 "use client";
 // import { Size } from "aws-cdk-lib/core";
 import * as p5 from "p5";
+
 // import { off } from "process";
 
 
@@ -29,6 +30,7 @@ const stripTerrainSketch = (p: p5) => {
     const mapScale:number = 130; // the max which the perlin noise can be scaled to by the map function
 
     let graphics: p5.Graphics;
+
 
 
     p.setup = () => {
