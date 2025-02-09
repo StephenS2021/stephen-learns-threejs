@@ -154,9 +154,9 @@ const ThreeScene: React.FC = () => {
             // renderer.render(scene, camera);
             // Update scene and rotate cube
             const renderScene = () => {
-                cube.rotation.x += options.speed ? options.speed : 0.01;
-                cube.rotation.y += options.speed ? options.speed : 0.01;
-                cube.position.y = options.boxX ? options.boxX : 0;
+                // cube.rotation.x += options.speed ? options.speed : 0.01;
+                // cube.rotation.y += options.speed ? options.speed : 0.01;
+                // cube.position.y = options.boxX ? options.boxX : 0;
                 renderer.render(scene,camera);
                 requestAnimationFrame(renderScene);
             }
