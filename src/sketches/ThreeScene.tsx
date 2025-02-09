@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { useEffect, useRef } from "react";
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import dat from 'dat.gui';
+// import dat from 'dat.gui';
 
 const ThreeScene: React.FC = () => {
     // create ref to keep track of the div for rendering without triggering re-rendering
