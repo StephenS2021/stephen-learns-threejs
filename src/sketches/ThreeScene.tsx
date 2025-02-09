@@ -120,26 +120,26 @@ const ThreeScene: React.FC = () => {
             |____/_/   \_\_|   (_)  \____|\___/|___|
              **/
 
-            const gui = new dat.GUI(); // Create new gui
-            const options = {
-                sphereColor: "#ffea00", // add option sphere color, hex string formats automatically are interpreted as color
-                wireframe: false,
-                speed: 0.01,
-                boxX: 0
-            }
+            // const gui = new dat.GUI(); // Create new gui
+            // const options = {
+            //     sphereColor: "#ffea00", // add option sphere color, hex string formats automatically are interpreted as color
+            //     wireframe: false,
+            //     speed: 0.01,
+            //     boxX: 0
+            // }
 
-            // change sphere color property using gui panel
-            // addColor detects that sphereColor is a color value and generates the color picker UI
-            gui.addColor(options, 'sphereColor').onChange(function(e){ // Use callback function to real-time update the sphere color
-                sphere.material.color.set(e);
-            });
+            // // change sphere color property using gui panel
+            // // addColor detects that sphereColor is a color value and generates the color picker UI
+            // gui.addColor(options, 'sphereColor').onChange(function(e){ // Use callback function to real-time update the sphere color
+            //     sphere.material.color.set(e);
+            // });
 
-            gui.add(options, 'wireframe').onChange(function(e){
-                sphere.material.wireframe = e;
-            });
-            // Add slider options for cube rotational speed and height
-            gui.add(options, 'speed', 0.01, 0.5); 
-            gui.add(options, 'boxX', -5, 5); 
+            // gui.add(options, 'wireframe').onChange(function(e){
+            //     sphere.material.wireframe = e;
+            // });
+            // // Add slider options for cube rotational speed and height
+            // gui.add(options, 'speed', 0.01, 0.5); 
+            // gui.add(options, 'boxX', -5, 5); 
 
 
             /**
