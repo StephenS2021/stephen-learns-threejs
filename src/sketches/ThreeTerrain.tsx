@@ -2,7 +2,7 @@
 
 import * as THREE from 'three';
 import { useEffect, useRef } from "react";
-import { OrbitControls, VerticalBlurShader } from 'three/examples/jsm/Addons.js';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise.js';
 
 // import dat from 'dat.gui';
