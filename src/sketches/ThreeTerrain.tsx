@@ -14,7 +14,7 @@ const ThreeTerrain: React.FC = () => {
     const createTerrain = () => {
         const width = 100;
         const height = 100;
-        const segments = 50;
+        const segments = 50; // number of segments across the sketch
 
         const geometry = new THREE.BufferGeometry();
 
@@ -22,7 +22,7 @@ const ThreeTerrain: React.FC = () => {
         const vertecies = [];
 
         const noise = new ImprovedNoise(); // initialize noise with seed
-        const scale = 20;
+        const scale = 20; // same this as multiplying by scl = 0.2 in my p5 sketch
         const amplitude = 20;
 
 
@@ -42,7 +42,7 @@ const ThreeTerrain: React.FC = () => {
         // Create indecies from vertecies
         const indices = [];
         for( let i = 0; i < segments; i++ ){
-            for( let j = 0; j < segments; j++){
+            for( let j = 0; j < segments; j++){ //                                  WHAT IS THIS DOING AAAAAAAAAA
                 const a = i * (segments + 1) + j; // Top-left vertex of the quad
                 const b = a + 1; // Top-right vertex of the quad
                 const c = (i + 1) * (segments + 1) + j; // Bottom-left vertex of the quad
@@ -59,7 +59,7 @@ const ThreeTerrain: React.FC = () => {
         geometry.setIndex(indices);
 
         // Compute normals for lighting
-        geometry.computeVertexNormals();
+        geometry.computeVertexNormals();            // WHAT IS THIS DOING AAAAAAAAAA
 
         return geometry;
     }
@@ -80,12 +80,12 @@ const ThreeTerrain: React.FC = () => {
             // Create orbit controls for the camera
             const orbit = new OrbitControls(camera, renderer.domElement)
             camera.position.set(0, 2, 5) // set x, y, z of camera
-            camera.up.set(0, -1, 0);
+            camera.up.set(0, -1, 0); // flip the camera because the terrain is upside down
 
             orbit.update() // update orbit of camera
 
             const terrainGeometry = createTerrain();
-            const terrainMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false });
+            const terrainMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, wireframe: false, side: THREE.DoubleSide });
             const terrainMesh = new THREE.Mesh(terrainGeometry, terrainMaterial);
             scene.add(terrainMesh);
             terrainMesh.castShadow = true;
