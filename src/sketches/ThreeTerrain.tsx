@@ -13,17 +13,17 @@ const ThreeTerrain: React.FC = () => {
 
     useEffect(() => {
         if(typeof window !== 'undefined'){
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const scene:THREE.Scene = new THREE.Scene();
+            const camera:THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             
             // Create renderer
-            const renderer = new THREE.WebGLRenderer();
+            const renderer:THREE.WebGLRenderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled =true;                       // Enable shadows
             canvasRef.current?.appendChild(renderer.domElement);
 
             // Create orbit controls for the camera
-            const orbit = new OrbitControls(camera, renderer.domElement)
+            const orbit:OrbitControls = new OrbitControls(camera, renderer.domElement)
             camera.position.set(0, 15, 30) // set x, y, z of camera
 
             orbit.update() // update orbit of camera
@@ -41,10 +41,10 @@ const ThreeTerrain: React.FC = () => {
             const height:number = 200;
             const segments:number = 100; // number of segments across the sketch
     
-            const geometry:THREE.BufferGeometry<THREE.NormalBufferAttributes> = new THREE.BufferGeometry();
+            const geometry:THREE.BufferGeometry = new THREE.BufferGeometry();
     
             // Create vertex array
-            const vertices = [];
+            const vertices: number[] = [];
     
             // const noise = new ImprovedNoise(); // initialize noise with seed
             const noise3d:NoiseFunction3D = createNoise3D();
@@ -56,9 +56,9 @@ const ThreeTerrain: React.FC = () => {
             // Loop over x for each row y
             for( let i = 0; i <= segments; i++ ){ // Row
                 for( let j = 0; j <= segments; j++){ // Column
-                    const x = ((i / segments) * width) - (width / 2); // Scale the x and y for each segment to the width / height then subtract height / width to center aroung 0, 0, 0
-                    const y = ((j / segments) * height) - (height / 2);
-                    const z = noise3d(x * scale, y * scale, 0) * amplitude; // Sample perlin noise and amplify it
+                    const x:number = ((i / segments) * width) - (width / 2); // Scale the x and y for each segment to the width / height then subtract height / width to center aroung 0, 0, 0
+                    const y:number = ((j / segments) * height) - (height / 2);
+                    const z:number = noise3d(x * scale, y * scale, 0) * amplitude; // Sample perlin noise and amplify it
                     vertices.push(x, y, z);
                 }
             }
@@ -69,7 +69,7 @@ const ThreeTerrain: React.FC = () => {
             // Create indecies from vertices
             // This runs one less than the vertices loop because for each segment there are segment+1 vertices
             // A quad is 4 vertices and corresponds to the segments
-            const indices = [];
+            const indices:number[] = [];
             for( let y = 0; y < segments; y++ ){
                 for( let x = 0; x < segments; x++){ 
                     // Calculates the index at vertex for row i and column j
@@ -101,10 +101,10 @@ const ThreeTerrain: React.FC = () => {
                      * 
                      * 
                      */
-                    const a = y * (segments + 1) + x; // Top-left vertex of the quad
-                    const b = a + 1; // Top-right vertex of the quad
-                    const c = (y + 1) * (segments + 1) + x; // Bottom-left vertex of the quad
-                    const d = c + 1; // Bottom-right vertex of the quad
+                    const a:number = y * (segments + 1) + x; // Top-left vertex of the quad
+                    const b:number = a + 1; // Top-right vertex of the quad
+                    const c:number = (y + 1) * (segments + 1) + x; // Bottom-left vertex of the quad
+                    const d:number = c + 1; // Bottom-right vertex of the quad
     
     
                     // Create two triangles for each quad
@@ -121,9 +121,9 @@ const ThreeTerrain: React.FC = () => {
             //  A normal is a vector that is perpendicular to a surface
             geometry.computeVertexNormals();            // For indexed geometries, the method sets each vertex normal to be the average of the face normals of the faces that share that vertex.
 
-            const terrainGeometry = geometry;
-            const terrainMaterial = new THREE.MeshStandardMaterial({ color: 0x046A38, wireframe: true, side: THREE.DoubleSide });
-            const terrainMesh = new THREE.Mesh(terrainGeometry, terrainMaterial);
+            const terrainGeometry:THREE.BufferGeometry = geometry;
+            const terrainMaterial:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ color: 0x046A38, wireframe: true, side: THREE.DoubleSide });
+            const terrainMesh:THREE.Mesh = new THREE.Mesh(terrainGeometry, terrainMaterial);
             scene.add(terrainMesh);
 
             terrainMesh.castShadow = true;
@@ -139,10 +139,10 @@ const ThreeTerrain: React.FC = () => {
             |_____|_|\__, |_| |_|\__|_|_| |_|\__, |
                     |___/                   |___/ 
              */
-            const ambientLight = new THREE.AmbientLight(0xFFFFFF, 2);
+            const ambientLight:THREE.AmbientLight = new THREE.AmbientLight(0xFFFFFF, 2);
             scene.add(ambientLight);
 
-            const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1);
+            const directionalLight:THREE.DirectionalLight = new THREE.DirectionalLight(0xFFFFFF, 1);
             scene.add(directionalLight);
             directionalLight.position.set(-30, 50, 0);
             directionalLight.castShadow = true;                                 // Allow directional light to cast shadow
@@ -161,17 +161,17 @@ const ThreeTerrain: React.FC = () => {
                                                      |___/ 
              */
 
-            let flying = 0;
+            let flying:number = 0;
             // Update scene and rotate cube
             const renderScene = () => {
 
                 flying -= 0.01;
-                const positions = terrainMesh.geometry.attributes.position.array;
+                const positions:THREE.TypedArray = terrainMesh.geometry.attributes.position.array;
                 for( let i = 0; i <= segments; i++ ){ // columns
                     for( let j = 0; j <= segments; j++){ // rows
-                        const index = (i * (segments + 1) + j) * 3; // Get correct index calculations
-                        const x = (i / segments) * width - width / 2;
-                        const y = (j / segments) * height - height / 2;
+                        const index:number = (i * (segments + 1) + j) * 3; // Get correct index calculations
+                        const x:number = (i / segments) * width - width / 2;
+                        const y:number = (j / segments) * height - height / 2;
                         positions[index + 2] = noise3d(x * scale, y * scale + flying, 0) * amplitude; // Update z value
                     }
                 }
