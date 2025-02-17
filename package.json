@@ -15,6 +15,7 @@
     "p5": "^1.11.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "simplex-noise": "^4.0.3",
     "three": "^0.172.0"
   },
   "devDependencies": {

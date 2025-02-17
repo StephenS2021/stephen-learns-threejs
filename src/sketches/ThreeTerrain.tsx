@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { useEffect, useRef } from "react";
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise.js';
+import { createNoise3D, NoiseFunction3D } from 'simplex-noise';
 
 // import dat from 'dat.gui';
 
@@ -37,18 +37,19 @@ const ThreeTerrain: React.FC = () => {
              \____|\___|\___/|_| |_| |_|\___|\__|_|   \__, |
                                                       |___/ 
             */
-            const width = 100;
-            const height = 100;
-            const segments = 100; // number of segments across the sketch
+            const width:number = 200;
+            const height:number = 200;
+            const segments:number = 100; // number of segments across the sketch
     
-            const geometry = new THREE.BufferGeometry();
+            const geometry:THREE.BufferGeometry<THREE.NormalBufferAttributes> = new THREE.BufferGeometry();
     
             // Create vertex array
             const vertices = [];
     
-            const noise = new ImprovedNoise(); // initialize noise with seed
-            const scale = 0.1; // How much space between each sample
-            const amplitude = 20; // Amplify perlin noise
+            // const noise = new ImprovedNoise(); // initialize noise with seed
+            const noise3d:NoiseFunction3D = createNoise3D();
+            const scale:number = 0.03; // How much space between each sample
+            const amplitude:number = 20; // Amplify perlin noise
     
     
             // Create vertex by perlin noise
@@ -57,7 +58,7 @@ const ThreeTerrain: React.FC = () => {
                 for( let j = 0; j <= segments; j++){ // Column
                     const x = ((i / segments) * width) - (width / 2); // Scale the x and y for each segment to the width / height then subtract height / width to center aroung 0, 0, 0
                     const y = ((j / segments) * height) - (height / 2);
-                    const z = noise.noise(x * scale, y * scale, 0) * amplitude; // Sample perlin noise and amplify it
+                    const z = noise3d(x * scale, y * scale, 0) * amplitude; // Sample perlin noise and amplify it
                     vertices.push(x, y, z);
                 }
             }
@@ -148,8 +149,8 @@ const ThreeTerrain: React.FC = () => {
             directionalLight.shadow.camera.right = 15;
             directionalLight.shadow.camera.top = 15;
 
-            const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
-            scene.add(dLightHelper);
+            // const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
+            // scene.add(dLightHelper);
 
             /**
              ____                _           _             
@@ -171,7 +172,7 @@ const ThreeTerrain: React.FC = () => {
                         const index = (i * (segments + 1) + j) * 3; // Get correct index calculations
                         const x = (i / segments) * width - width / 2;
                         const y = (j / segments) * height - height / 2;
-                        positions[index + 2] = noise.noise(x * scale, y * scale + flying, 0) * amplitude; // Update z value
+                        positions[index + 2] = noise3d(x * scale, y * scale + flying, 0) * amplitude; // Update z value
                     }
                 }
 
