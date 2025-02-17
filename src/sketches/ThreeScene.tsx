@@ -82,11 +82,11 @@ const ThreeScene: React.FC = () => {
                     |___/                   |___/ 
              */
             // Create a dim ambient light
-            const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.5);
+            const ambientLight = new THREE.AmbientLight(0xFFFFFF, 2);
             scene.add(ambientLight);
 
             // add a bright direcitonal light
-            const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.3);
+            const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1);
             scene.add(directionalLight);
             directionalLight.position.set(-30, 50, 0);
             directionalLight.castShadow = true;                                 // Allow directional light to cast shadow
@@ -100,9 +100,10 @@ const ThreeScene: React.FC = () => {
             const dLightShadowHelper  = new THREE.CameraHelper(directionalLight.shadow.camera);
             scene.add(dLightShadowHelper)
 
+            // Create a spotlight
             const spotLight = new THREE.SpotLight(0xFFFFFF, 50);
             scene.add(spotLight);
-            spotLight.position.set(50, -50, 0);
+            spotLight.position.set(50, 50, 0);
             spotLight.angle = 0.2;
             spotLight.distance = 110;
             spotLight.decay = 1;
@@ -151,13 +152,29 @@ const ThreeScene: React.FC = () => {
                                                      |___/ 
              */
 
+
+            const mousePos = new THREE.Vector2();
+            window.addEventListener('mousemove', function(e){
+                mousePos.x = (e.clientX / window.innerWidth) * 2 +1;
+                mousePos.y = - (e.clientY / window.innerWidth) * 2 +1;
+            });
+
+            const rayCaster = new THREE.Raycaster();
+
             // renderer.render(scene, camera);
             // Update scene and rotate cube
             const renderScene = () => {
+                // cube.rotation.x += options.speed ? options.speed : 0.01;
+                // cube.rotation.y += options.speed ? options.speed : 0.01;
+                // cube.position.y = options.boxX ? options.boxX : 0;
                 cube.rotation.x += 0.01;
                 cube.rotation.y += 0.01;
-                cube.position.y = 5;
+                cube.position.y = 0;
                 renderer.render(scene,camera);
+
+                rayCaster.setFromCamera(mousePos, camera);
+                const intersects = rayCaster.intersectObjects(scene.children);
+                console.log(intersects);
                 requestAnimationFrame(renderScene);
             }
 
