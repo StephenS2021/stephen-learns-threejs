@@ -5,12 +5,36 @@ import { useEffect, useRef } from "react";
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { createNoise3D, NoiseFunction3D } from 'simplex-noise';
 
+
 // import dat from 'dat.gui';
 
 const ThreeTerrain: React.FC = () => {
     // create ref to keep track of the div for rendering without triggering re-rendering
-    const canvasRef = useRef<HTMLDivElement>(null);    
+    const canvasRef = useRef<HTMLDivElement>(null);
+    
+    const fractalPerlinNoise = (
+        noise:NoiseFunction3D, 
+        x:number, 
+        y:number, 
+        octaves:number, // Number of noise layers
+        persistence:number, // How much each octave contributes
+        lacunarity:number, // How much the frequency changes per octave
+        scale:number // Scales how far apart each sample is taken
+    ):number => {
+        let value:number = 0;
+        let amplitude:number = 1;
+        let maxValue:number = 0;
+        let frequency:number = 1;
+        for( let i = 0; i < octaves; i++ ){
+            value += noise((x * frequency) * scale, (y * frequency )* scale, 0) * amplitude;
+            maxValue += amplitude;
+            frequency *= lacunarity;
+            amplitude *= persistence;
+        }
 
+        return value / maxValue;
+    };
+    
     useEffect(() => {
         if(typeof window !== 'undefined'){
             const scene:THREE.Scene = new THREE.Scene();
@@ -23,8 +47,10 @@ const ThreeTerrain: React.FC = () => {
             canvasRef.current?.appendChild(renderer.domElement);
 
             // Create orbit controls for the camera
-            const orbit:OrbitControls = new OrbitControls(camera, renderer.domElement)
-            camera.position.set(0, 15, 30) // set x, y, z of camera
+            const orbit:OrbitControls = new OrbitControls(camera, renderer.domElement);
+            camera.position.set(0, 15, 30); // set x, y, z of camera
+            camera.rotation.y = 0;
+            camera.position.set(-camera.position.x, camera.position.y, -camera.position.z); // set x, y, z of camera
 
             orbit.update() // update orbit of camera
 
@@ -39,7 +65,7 @@ const ThreeTerrain: React.FC = () => {
             */
             const width:number = 200;
             const height:number = 200;
-            const segments:number = 100; // number of segments across the sketch
+            const segments:number = 150; // number of segments across the sketch
     
             const geometry:THREE.BufferGeometry = new THREE.BufferGeometry();
     
@@ -58,7 +84,9 @@ const ThreeTerrain: React.FC = () => {
                 for( let j = 0; j <= segments; j++){ // Column
                     const x:number = ((i / segments) * width) - (width / 2); // Scale the x and y for each segment to the width / height then subtract height / width to center aroung 0, 0, 0
                     const y:number = ((j / segments) * height) - (height / 2);
-                    const z:number = noise3d(x * scale, y * scale, 0) * amplitude; // Sample perlin noise and amplify it
+                    // const z:number = noise3d(x * scale, y * scale, 0) * amplitude; // Sample perlin noise and amplify it
+                    const z:number = fractalPerlinNoise(noise3d, x, y, 4, 0.5, 2, scale) * amplitude;
+                    // console.log(fractalPerlinNoise(noise3d, x, y, 4, 0.5, 0, 20));
                     vertices.push(x, y, z);
                 }
             }
@@ -164,15 +192,17 @@ const ThreeTerrain: React.FC = () => {
             let flying:number = 0;
             // Update scene and rotate cube
             const renderScene = () => {
-
-                flying -= 0.01;
+                console.log(camera.rotation.y);
+                flying -= 0.05;
                 const positions:THREE.TypedArray = terrainMesh.geometry.attributes.position.array;
                 for( let i = 0; i <= segments; i++ ){ // columns
                     for( let j = 0; j <= segments; j++){ // rows
                         const index:number = (i * (segments + 1) + j) * 3; // Get correct index calculations
                         const x:number = (i / segments) * width - width / 2;
                         const y:number = (j / segments) * height - height / 2;
-                        positions[index + 2] = noise3d(x * scale, y * scale + flying, 0) * amplitude; // Update z value
+                        // positions[index + 2] = noise3d(x * scale, y * scale + flying, 0) * amplitude; // Update z value
+                        positions[index + 2] = fractalPerlinNoise(noise3d, x, y + flying, 8, 0.6, 1.8, 0.020) * (amplitude + 1);
+
                     }
                 }
 
@@ -207,6 +237,6 @@ export default ThreeTerrain;
 /* CREDIT: 
 * https://medium.com/@claudeando/integrating-three-js-with-next-js-and-typescript-81f47730103e
 * https://www.youtube.com/watch?v=xJAfLdUgdc4&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho
-*
+* https://thebookofshaders.com/13/
 * 
 * */
