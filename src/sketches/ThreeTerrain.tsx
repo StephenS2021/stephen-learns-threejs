@@ -150,7 +150,13 @@ const ThreeTerrain: React.FC = () => {
             geometry.computeVertexNormals();            // For indexed geometries, the method sets each vertex normal to be the average of the face normals of the faces that share that vertex.
 
             const terrainGeometry:THREE.BufferGeometry = geometry;
-            const terrainMaterial:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ color: 0x046A38, wireframe: true, side: THREE.DoubleSide });
+            const terrainMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x2E88F0, 
+                wireframe: false, 
+                // shininess: 200, 
+                roughness: 0.1,
+                side: THREE.DoubleSide 
+            });
             const terrainMesh:THREE.Mesh = new THREE.Mesh(terrainGeometry, terrainMaterial);
             scene.add(terrainMesh);
 

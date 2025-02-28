@@ -11,7 +11,7 @@ export default function Home() {
       {/* <P5Wrapper sketch={stripTerrainSketch}/> */}
       {/* <ThreeScene/> */}
       <ThreeTerrain/>
-      <p className="h-screen flex items-center justify-center text-[#4CBB17] text-[200px]">oenis</p>
+      <p className="h-screen flex items-center justify-center text-[#4CBB17] text-[200px]">text</p>
     </div>
   );
 }
