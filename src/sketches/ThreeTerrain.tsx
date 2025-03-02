@@ -152,7 +152,7 @@ const ThreeTerrain: React.FC = () => {
             const terrainGeometry:THREE.BufferGeometry = geometry;
             const terrainMaterial = new THREE.MeshStandardMaterial({ 
                 color: 0x2E88F0, 
-                wireframe: false, 
+                wireframe: true, 
                 // shininess: 200, 
                 roughness: 0.1,
                 side: THREE.DoubleSide 
