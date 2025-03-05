@@ -16,6 +16,7 @@ const ThreeTerrain: React.FC = () => {
         noise:NoiseFunction3D, 
         x:number, 
         y:number, 
+        z:number,
         octaves:number, // Number of noise layers
         persistence:number, // How much each octave contributes
         lacunarity:number, // How much the frequency changes per octave
@@ -26,7 +27,7 @@ const ThreeTerrain: React.FC = () => {
         let maxValue:number = 0;
         let frequency:number = 1;
         for( let i = 0; i < octaves; i++ ){
-            value += noise((x * frequency) * scale, (y * frequency )* scale, 0) * amplitude;
+            value += noise((x * frequency) * scale, (y * frequency )* scale, (z * frequency) * scale) * amplitude;
             maxValue += amplitude;
             frequency *= lacunarity;
             amplitude *= persistence;
@@ -85,7 +86,7 @@ const ThreeTerrain: React.FC = () => {
                     const x:number = ((i / segments) * width) - (width / 2); // Scale the x and y for each segment to the width / height then subtract height / width to center aroung 0, 0, 0
                     const y:number = ((j / segments) * height) - (height / 2);
                     // const z:number = noise3d(x * scale, y * scale, 0) * amplitude; // Sample perlin noise and amplify it
-                    const z:number = fractalPerlinNoise(noise3d, x, y, 4, 0.5, 2, scale) * amplitude;
+                    const z:number = fractalPerlinNoise(noise3d, x, y, 0, 4, 0.5, 2, scale) * amplitude;
                     // console.log(fractalPerlinNoise(noise3d, x, y, 4, 0.5, 0, 20));
                     vertices.push(x, y, z);
                 }
@@ -171,7 +172,7 @@ const ThreeTerrain: React.FC = () => {
             | |   | |/ _` | '_ \| __| | '_ \ / _` |
             | |___| | (_| | | | | |_| | | | | (_| |
             |_____|_|\__, |_| |_|\__|_|_| |_|\__, |
-                    |___/                   |___/ 
+                    |___/                    |___/ 
              */
             const ambientLight:THREE.AmbientLight = new THREE.AmbientLight(0xFFFFFF, 2);
             scene.add(ambientLight);
@@ -207,7 +208,7 @@ const ThreeTerrain: React.FC = () => {
                         const x:number = (i / segments) * width - width / 2;
                         const y:number = (j / segments) * height - height / 2;
                         // positions[index + 2] = noise3d(x * scale, y * scale + flying, 0) * amplitude; // Update z value
-                        positions[index + 2] = fractalPerlinNoise(noise3d, x, y + flying, 8, 0.6, 1.8, 0.020) * (amplitude + 1);
+                        positions[index + 2] = fractalPerlinNoise(noise3d, x, y + flying, flying, 8, 0.6, 1.8, 0.020) * (amplitude + 1);
 
                     }
                 }
