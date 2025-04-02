@@ -1,4 +1,3 @@
-"use client";
 // import { Size } from "aws-cdk-lib/core";
 import * as p5 from "p5";
 
