@@ -325,8 +325,9 @@ export default ThreeTerrain;
 
 
 /* CREDIT: 
-* https://medium.com/@claudeando/integrating-three-js-with-next-js-and-typescript-81f47730103e
-* https://www.youtube.com/watch?v=xJAfLdUgdc4&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho
-* https://thebookofshaders.com/13/
-* 
+* - https://medium.com/@claudeando/integrating-three-js-with-next-js-and-typescript-81f47730103e
+* - https://www.youtube.com/watch?v=xJAfLdUgdc4&list=PLjcjAqAnHd1EIxV4FSZIiJZvsdrBc1Xho
+* - https://thebookofshaders.com/13/
+* - Learning Three.js - 2nd Edition by Jos Dirksen
+* - Real Time Rendering - 4th Edition by  Eric Haines, Naty Hoffman, and Tomas Möller
 * */
