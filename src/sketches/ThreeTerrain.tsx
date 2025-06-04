@@ -204,7 +204,7 @@ const ThreeTerrain: React.FC = () => {
         const loader = new FontLoader();
 
         // Load font from JSON file because I think that is the only way to load a font in Three.js cus its 3D
-        loader.load( '/public/fonts/Roboto_Bold.json', ( font ) => {
+        loader.load( '/fonts/Roboto_Bold.json', ( font ) => {
             const textGeo = new TextGeometry( 'Stephen Spencer-Wong', { // Create a text geometry and write my name :)
                 font: font,
                 size: 10,
