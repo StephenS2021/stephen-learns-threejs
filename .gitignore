@@ -40,3 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 P5WrapperParent.tsx
+*.ttf
+*.exr
+nx.png
+ny.png
+nz.png
+px.png
+py.png
+pz.png
