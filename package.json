@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dimforge/rapier3d": "^0.17.1",
+    "@dimforge/rapier3d-compat": "^0.17.1",
     "@vitejs/plugin-react": "^4.3.4",
     "dat.gui": "^0.7.9",
     "noisejs": "^2.1.0",
@@ -30,6 +32,7 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
+    "lil-gui": "^0.20.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2",
