@@ -19,6 +19,8 @@ const ThreeTerrain: React.FC = () => {
     //   because it wont be reset due to changes in state/props
     const animationFrameIdRef = useRef<number | null>(null); 
     
+    const nameMesh = useRef<THREE.Mesh | null>(null); // Holds reference to the text mesh so we can manipulate it later
+    const linkedInMesh = useRef<THREE.Mesh | null>(null); 
     const fractalPerlinNoise = (
         noise:NoiseFunction3D, 
         x:number, 
@@ -200,7 +202,7 @@ const ThreeTerrain: React.FC = () => {
         terrainMesh.rotation.x = -0.5 * Math.PI; // Rotate terrain flat
         scene.add(terrainMesh);
 
-        let textMesh:THREE.Mesh = new THREE.Mesh() // Initialize textMesh to avoid undefined errors
+        // let textMesh:THREE.Mesh = new THREE.Mesh() // Initialize textMesh to avoid undefined errors
         const loader = new FontLoader();
 
         // Load font from JSON file because I think that is the only way to load a font in Three.js cus its 3D
@@ -217,15 +219,55 @@ const ThreeTerrain: React.FC = () => {
                 bevelSegments: 0
             })
             textGeo.center() // Center text at the origin
-            const material:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ color: 0x34ebab, roughness: 0, side: THREE.DoubleSide }) // Give text a material just like any other ThreeJs object
-            textMesh = new THREE.Mesh(textGeo, material)
-            textMesh.name = 'Stephen_Name' // Name the text mesh so I can identify it with raycasting later
-            textMesh.position.set(0, 10, 0) // Position the text above the terrain
-            textMesh.castShadow = true // Allow text to cast shadow
-            textMesh.receiveShadow = true // Allow text to receive shadow
-            textMesh.rotateY(Math.PI) // Rotate text to face the camera
-            scene.add(textMesh)
+            const material:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x34ebab, 
+                roughness: 0,
+                side: THREE.DoubleSide 
+            }) // Give text a material just like any other ThreeJs object
+            const mesh = new THREE.Mesh(textGeo, material)
+            mesh.name = 'Stephen_Name' // Name the text mesh so I can identify it with raycasting later
+            mesh.position.set(0, 30, 0) // Position the text above the terrain
+            mesh.castShadow = true // Allow text to cast shadow
+            mesh.receiveShadow = true // Allow text to receive shadow
+            mesh.rotateY(Math.PI) // Rotate text to face the camera
+
+            nameMesh.current = mesh // Save the text mesh to the ref so we can manipulate it later
+            scene.add(mesh) // Add the actual THREE.Mesh instance to the scene, textMesh is a reference object holding the mesh
         })
+
+        loader.load( '/fonts/Roboto_Bold.json', ( font ) => {
+            const textGeo = new TextGeometry( 'My LinkedIn', { // Create a text geometry
+                font: font,
+                size: 10,
+                depth: 5,
+                curveSegments: 1,
+                bevelEnabled: false,
+                bevelThickness: 1,
+                bevelSize: 1,
+                bevelOffset: 0,
+                bevelSegments: 0
+            })
+            textGeo.center() // Center text at the origin
+            const material:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x34ebab, 
+                roughness: 0,
+                side: THREE.DoubleSide 
+            }) // Give text a material just like any other ThreeJs object
+            const mesh = new THREE.Mesh(textGeo, material)
+            mesh.name = 'LinkedIn' // Name the text mesh so I can identify it with raycasting later
+            mesh.position.set(0, 10, 0) // Position the text above the terrain
+            mesh.castShadow = true // Allow text to cast shadow
+            mesh.receiveShadow = true // Allow text to receive shadow
+            mesh.rotateY(Math.PI) // Rotate text to face the camera
+
+            linkedInMesh.current = mesh // Save the text mesh to the ref so we can manipulate it later
+            scene.add(mesh) // Add the actual THREE.Mesh instance to the scene, textMesh is a reference object holding the mesh
+        })
+
+
+
+        // const nameBoundingBox:THREE.Box3 = new THREE.Box3().setFromObject(textMesh) // Create bounding box for the text mesh
+        // const mesh = new THREE.Mesh(
 
         /**
              _     _       _     _   _             
@@ -261,7 +303,7 @@ const ThreeTerrain: React.FC = () => {
 
         const raycaster:THREE.Raycaster = new THREE.Raycaster() // Create a raycaster to detect mouse clicks
         document.addEventListener('click', (event:MouseEvent) => {
-            if (!canvasRef.current) return
+            if (!canvasRef.current || !nameMesh.current) return
             const coords:THREE.Vector2  = new THREE.Vector2(
                 (event.clientX / canvasRef.current.clientWidth) * 2 - 1, // Calculate the coordinates of the mouse click normalized between -1 and 1
                 -((event.clientY / canvasRef.current.clientHeight) * 2 -1) // Invert y coordinate because Three.js uses different system or something
@@ -270,13 +312,16 @@ const ThreeTerrain: React.FC = () => {
             raycaster.setFromCamera(coords, camera); // Set the raycaster from the camera and mouse coordinates
             const intersects:THREE.Intersection[] = raycaster.intersectObjects(scene.children, true); // Check for intersections with the scene children
             if (intersects.length > 0) { // If there are intersections
-                console.log(intersects[0].object); // Log the first intersection object
+                const intersectedObject = intersects[0].object // Get the intersected object
+                if(intersectedObject.name === 'LinkedIn') { // If the intersected object is the text
+                    window.location.href = 'https://www.linkedin.com/in/stephen-spencer-wong/'; // Redirect to my LinkedIn
+                }
             }
         })
 
         document.addEventListener('pointermove', (event:MouseEvent) => {
-            if (!canvasRef.current) return
-            textMesh.material.color.set(0x34ebab); // Reset text color to original
+            if (!canvasRef.current || !linkedInMesh.current) return
+            linkedInMesh.current.material.color.set(0x34ebab) // Reset text color to original
             const coords:THREE.Vector2  = new THREE.Vector2(
                 (event.clientX / canvasRef.current.clientWidth) * 2 - 1, // Calculate the coordinates of the mouse click normalized between -1 and 1
                 -((event.clientY / canvasRef.current.clientHeight) * 2 -1) // Invert y coordinate because Three.js uses different system or something
@@ -285,9 +330,9 @@ const ThreeTerrain: React.FC = () => {
             raycaster.setFromCamera(coords, camera); // Set the raycaster from the camera and mouse coordinates
             const intersects:THREE.Intersection[] = raycaster.intersectObjects(scene.children, true); // Check for intersections with the scene children
             if (intersects.length > 0) { // If there are intersections
-                console.log(intersects[0].object); // Log the first intersection object
+
                 const intersectedObject = intersects[0].object // Get the intersected object
-                if(intersectedObject.name === 'Stephen_Name') { // If the intersected object is the text
+                if(intersectedObject.name === 'LinkedIn') { // If the intersected object is the text
                     intersectedObject.material.color.set(0xFFFFFF); // Change the color of the text to red
                 }
             }
@@ -331,17 +376,17 @@ const ThreeTerrain: React.FC = () => {
         // Handle window resize
         const handleResize = () => {
             // If no canvas ref don't resize
-            if (!canvasRef.current) return;
+            if (!canvasRef.current || !rendererRef.current || !sceneRef.current) return;
     
-            const width = canvasRef.current.clientWidth;
-            const height = canvasRef.current.clientHeight;
+            const width = window.innerWidth
+            const height = window.innerHeight
             
             // Update camera
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
+            camera.aspect = width / height
+            camera.updateProjectionMatrix()
             
             // Update renderer
-            renderer.setSize(width, height, false);
+            rendererRef.current.setSize(width, height)
         };
         // Call resize immediately because we initialize with specific styling when we return the canvas below
         handleResize();
@@ -353,6 +398,12 @@ const ThreeTerrain: React.FC = () => {
             // Stop animation loop
             if (animationFrameIdRef.current) {
                 cancelAnimationFrame(animationFrameIdRef.current);
+            }
+
+            if (nameMesh.current) { // Remove the textMesh if it exists
+                scene.remove(nameMesh.current)
+                nameMesh.current.geometry.dispose();
+                (nameMesh.current.material as THREE.Material).dispose() // Need to cast material to THREE.Material
             }
 
             // Dispose of renderer and the canvas element
@@ -373,6 +424,8 @@ const ThreeTerrain: React.FC = () => {
                 // Clear the renderer ref
                 rendererRef.current = null;
             }
+
+    
 
             // Dispose of the children of sceneRef
             // Disposes geometry, terrainGeometry, terrainMaterial
