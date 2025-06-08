@@ -1,5 +1,5 @@
 // import { Size } from "aws-cdk-lib/core";
-import * as p5 from "p5";
+import p5 from "p5";
 
 // import { off } from "process";
 
@@ -13,7 +13,7 @@ import * as p5 from "p5";
     `const instance = new p5(sketch, canvasRef.current);`
     the library automatically injects the `sketch` function with the p5 object required
 */
-const stripTerrainSketch = (p: p5) => {
+const StripTerrainSketch = (p: p5) => {
     // const [width, height] = [1500, 900]
     let cols:number; let rows:number;
     const scl:number = 20; // controls how many vertices fit within the triangle strip by defining spacing between grid points
@@ -122,4 +122,4 @@ const stripTerrainSketch = (p: p5) => {
 
 };
 
-export default stripTerrainSketch;
+export default StripTerrainSketch;

@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useRef, useEffect, useState } from "react";
 import p5 from "p5";
 

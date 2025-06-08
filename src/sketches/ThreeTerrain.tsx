@@ -75,10 +75,12 @@ const ThreeTerrain: React.FC = () => {
         camera.position.set(-camera.position.x, camera.position.y, -camera.position.z); // set x, y, z of camera
 
         orbit.update() // update orbit of camera
+        orbit.enabled = false;
 
         new RGBELoader().load('/models/pure-sky/kloofendal_48d_partly_cloudy_puresky_4k.hdr', (envMap) => {
             envMap.mapping = THREE.EquirectangularReflectionMapping
-            scene.background = envMap
+            // scene.background = envMap
+            scene.background = new THREE.Color( 0xFFFFFF );
             scene.environment = envMap // Set the environment map for reflections from the HDRI file
         })
 
@@ -90,21 +92,21 @@ const ThreeTerrain: React.FC = () => {
             \____|\___|\___/|_| |_| |_|\___|\__|_|   \__, |
                                                     |___/ 
         */
-        const width:number = 200; // width of the terrain
+        const width:number = 300; // width of the terrain
         const height:number = 200; // height of the terrain
 
 
         // Noise parameters
-        const scale:number = 0.03; // How much space between each sample. A larger scale means more variance in height (i.e. more drastic hills and valleys) 
-        const octaves:number = 4; // Number of octaves to use for the fractal noise
-        const persistence:number = 0.5; // How much each octave contributes to the final value
+        const scale:number = 0.010; // How much space between each sample. A larger scale means more variance in height (i.e. more drastic hills and valleys) 
+        const octaves:number = 5; // Number of octaves to use for the fractal noise
+        const persistence:number = 0.15; // How much each octave contributes to the final value
         const lacunarity:number = 5; // How much the frequency changes per octave
-        const amplitude:number = 5.5; // How much the noise affects the height of the terrain. Also correlated with how drastic the hills and valleys are
+        const amplitude:number = 12; // How much the noise affects the height of the terrain. Also correlated with how drastic the hills and valleys are
 
         // Number of segments across the sketch. Defines how many vertices are created across the width and height
         // The more segments, the more vertices, the more detail
         // If segments = 2, then there are 3 vertices across the width and height
-        const segments:number = 150; 
+        const segments:number = 200; 
 
     
 
@@ -120,7 +122,7 @@ const ThreeTerrain: React.FC = () => {
                 const y:number = ((j / segments) * height) - (height / 2);
                 // const z:number = noise3d(x * scale, y * scale, 0) * amplitude; // Sample perlin noise and amplify it
 
-                const z:number = fractalPerlinNoise(noise3d, x, y, 0, octaves, persistence, lacunarity, scale) * amplitude; // Sample fractal perlin noise and amplify it
+                let z:number = fractalPerlinNoise(noise3d, x, y, 0, octaves, persistence, lacunarity, scale) * amplitude; // Sample fractal perlin noise and amplify it
                 // console.log(fractalPerlinNoise(noise3d, x, y, 4, 0.5, 0, 20));
                 vertices.push(x, y, z);
             }
@@ -193,7 +195,7 @@ const ThreeTerrain: React.FC = () => {
             color: 0x2B65EC, 
             // wireframe: true, 
             // shininess: 50, 
-            roughness: 0,
+            roughness: 0.1,
             side: THREE.DoubleSide,
         });
         const terrainMesh:THREE.Mesh = new THREE.Mesh(terrainGeometry, terrainMaterial);
@@ -202,67 +204,67 @@ const ThreeTerrain: React.FC = () => {
         terrainMesh.rotation.x = -0.5 * Math.PI; // Rotate terrain flat
         scene.add(terrainMesh);
 
-        // let textMesh:THREE.Mesh = new THREE.Mesh() // Initialize textMesh to avoid undefined errors
-        const loader = new FontLoader();
+        // // let textMesh:THREE.Mesh = new THREE.Mesh() // Initialize textMesh to avoid undefined errors
+        // const loader = new FontLoader();
 
-        // Load font from JSON file because I think that is the only way to load a font in Three.js cus its 3D
-        loader.load( '/fonts/Roboto_Bold.json', ( font ) => {
-            const textGeo = new TextGeometry( 'Stephen Spencer-Wong', { // Create a text geometry and write my name :)
-                font: font,
-                size: 10,
-                depth: 5,
-                curveSegments: 1,
-                bevelEnabled: false,
-                bevelThickness: 1,
-                bevelSize: 1,
-                bevelOffset: 0,
-                bevelSegments: 0
-            })
-            textGeo.center() // Center text at the origin
-            const material:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x34ebab, 
-                roughness: 0,
-                side: THREE.DoubleSide 
-            }) // Give text a material just like any other ThreeJs object
-            const mesh = new THREE.Mesh(textGeo, material)
-            mesh.name = 'Stephen_Name' // Name the text mesh so I can identify it with raycasting later
-            mesh.position.set(0, 30, 0) // Position the text above the terrain
-            mesh.castShadow = true // Allow text to cast shadow
-            mesh.receiveShadow = true // Allow text to receive shadow
-            mesh.rotateY(Math.PI) // Rotate text to face the camera
+        // // Load font from JSON file because I think that is the only way to load a font in Three.js cus its 3D
+        // loader.load( '/fonts/Roboto_Bold.json', ( font ) => {
+        //     const textGeo = new TextGeometry( 'Stephen Spencer-Wong', { // Create a text geometry and write my name :)
+        //         font: font,
+        //         size: 10,
+        //         depth: 5,
+        //         curveSegments: 1,
+        //         bevelEnabled: false,
+        //         bevelThickness: 1,
+        //         bevelSize: 1,
+        //         bevelOffset: 0,
+        //         bevelSegments: 0
+        //     })
+        //     textGeo.center() // Center text at the origin
+        //     const material:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ 
+        //         color: 0x34ebab, 
+        //         roughness: 0,
+        //         side: THREE.DoubleSide 
+        //     }) // Give text a material just like any other ThreeJs object
+        //     const mesh = new THREE.Mesh(textGeo, material)
+        //     mesh.name = 'Stephen_Name' // Name the text mesh so I can identify it with raycasting later
+        //     mesh.position.set(0, 30, 0) // Position the text above the terrain
+        //     mesh.castShadow = true // Allow text to cast shadow
+        //     mesh.receiveShadow = true // Allow text to receive shadow
+        //     mesh.rotateY(Math.PI) // Rotate text to face the camera
 
-            nameMesh.current = mesh // Save the text mesh to the ref so we can manipulate it later
-            scene.add(mesh) // Add the actual THREE.Mesh instance to the scene, textMesh is a reference object holding the mesh
-        })
+        //     nameMesh.current = mesh // Save the text mesh to the ref so we can manipulate it later
+        //     scene.add(mesh) // Add the actual THREE.Mesh instance to the scene, textMesh is a reference object holding the mesh
+        // })
 
-        loader.load( '/fonts/Roboto_Bold.json', ( font ) => {
-            const textGeo = new TextGeometry( 'My LinkedIn', { // Create a text geometry
-                font: font,
-                size: 10,
-                depth: 5,
-                curveSegments: 1,
-                bevelEnabled: false,
-                bevelThickness: 1,
-                bevelSize: 1,
-                bevelOffset: 0,
-                bevelSegments: 0
-            })
-            textGeo.center() // Center text at the origin
-            const material:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x34ebab, 
-                roughness: 0,
-                side: THREE.DoubleSide 
-            }) // Give text a material just like any other ThreeJs object
-            const mesh = new THREE.Mesh(textGeo, material)
-            mesh.name = 'LinkedIn' // Name the text mesh so I can identify it with raycasting later
-            mesh.position.set(0, 10, 0) // Position the text above the terrain
-            mesh.castShadow = true // Allow text to cast shadow
-            mesh.receiveShadow = true // Allow text to receive shadow
-            mesh.rotateY(Math.PI) // Rotate text to face the camera
+        // loader.load( '/fonts/Roboto_Bold.json', ( font ) => {
+        //     const textGeo = new TextGeometry( 'My LinkedIn', { // Create a text geometry
+        //         font: font,
+        //         size: 10,
+        //         depth: 5,
+        //         curveSegments: 1,
+        //         bevelEnabled: false,
+        //         bevelThickness: 1,
+        //         bevelSize: 1,
+        //         bevelOffset: 0,
+        //         bevelSegments: 0
+        //     })
+        //     textGeo.center() // Center text at the origin
+        //     const material:THREE.MeshStandardMaterial = new THREE.MeshStandardMaterial({ 
+        //         color: 0x34ebab,
+        //         roughness: 0,
+        //         side: THREE.DoubleSide 
+        //     }) // Give text a material just like any other ThreeJs object
+        //     const mesh = new THREE.Mesh(textGeo, material)
+        //     mesh.name = 'LinkedIn' // Name the text mesh so I can identify it with raycasting later
+        //     mesh.position.set(0, 10, 0) // Position the text above the terrain
+        //     mesh.castShadow = true // Allow text to cast shadow
+        //     mesh.receiveShadow = true // Allow text to receive shadow
+        //     mesh.rotateY(Math.PI) // Rotate text to face the camera
 
-            linkedInMesh.current = mesh // Save the text mesh to the ref so we can manipulate it later
-            scene.add(mesh) // Add the actual THREE.Mesh instance to the scene, textMesh is a reference object holding the mesh
-        })
+        //     linkedInMesh.current = mesh // Save the text mesh to the ref so we can manipulate it later
+        //     scene.add(mesh) // Add the actual THREE.Mesh instance to the scene, textMesh is a reference object holding the mesh
+        // })
 
 
 
@@ -321,7 +323,7 @@ const ThreeTerrain: React.FC = () => {
 
         document.addEventListener('pointermove', (event:MouseEvent) => {
             if (!canvasRef.current || !linkedInMesh.current) return
-            linkedInMesh.current.material.color.set(0x34ebab) // Reset text color to original
+            (linkedInMesh.current.material as THREE.MeshStandardMaterial).color.set(0x34ebab) // Reset text color to original
             const coords:THREE.Vector2  = new THREE.Vector2(
                 (event.clientX / canvasRef.current.clientWidth) * 2 - 1, // Calculate the coordinates of the mouse click normalized between -1 and 1
                 -((event.clientY / canvasRef.current.clientHeight) * 2 -1) // Invert y coordinate because Three.js uses different system or something
@@ -333,7 +335,10 @@ const ThreeTerrain: React.FC = () => {
 
                 const intersectedObject = intersects[0].object // Get the intersected object
                 if(intersectedObject.name === 'LinkedIn') { // If the intersected object is the text
-                    intersectedObject.material.color.set(0xFFFFFF); // Change the color of the text to red
+                    const material = (intersectedObject as THREE.Mesh).material;
+                    if (material instanceof THREE.MeshStandardMaterial) {
+                        material.color.set(0xFFFFFF); // Change the color of the text to red
+                    }
                 }
             }
         })
@@ -349,17 +354,30 @@ const ThreeTerrain: React.FC = () => {
         let flying:number = 0;
         // Update scene and rotate cube
         const renderScene = () => {
-            flying -= 0.05;
+            flying -= 0.2;
             const positions:THREE.TypedArray = terrainMesh.geometry.attributes.position.array; // Get the position array from the geometry
             for( let i = 0; i <= segments; i++ ){ // columns
                 for( let j = 0; j <= segments; j++){ // rows
-                    const index:number = (i * (segments + 1) + j) * 3; // Get correct index calculations
-                    const x:number = (i / segments) * width - width / 2; // Scale the x and y for each segment to the width / height then subtract height / width to center aroung 0, 0, 0
-                    const y:number = (j / segments) * height - height / 2;
-                    // positions[index + 2] = noise3d(x * scale, y * scale + flying, 0) * amplitude; // Update z value
-                    positions[index + 2] = fractalPerlinNoise(noise3d, x, y + flying, flying, 8, 0.6, 1.8, 0.020) * (amplitude + 1); // Update z value using custom fractal noise function
 
+                    // Get correct index calculations, the positions array is stored in pairs of 3 (x, y, z) so we multiply by 3 to select only the z (height) value
+                    // Since each vertex has 3 components (x, y, z), the formula multiplies the 1D index by 3 to get the starting position of the vertex in the positions array:
+                    /**
+                        i: The row index (0-based).
+                        j: The column index (0-based).
+                        (segments + 1): number of vertices in each row (including the extra vertex at the end of the grid)
+
+                        index * 3 gives the position of the x coordinate of the vertex.
+                        index * 3 + 1 gives the position of the y coordinate.
+                        index * 3 + 2 gives the position of the z coordinate.
+                    */
+                    const index:number = (i * (segments + 1) + j) * 3; 
+                    const x:number = (((i / segments) * width) - (width / 2)); // Scale the x and y for each segment to the width / height then subtract height / width to center aroung 0, 0, 0
+                    const y:number = (((j / segments) * height) - (height / 2));
+                    let parabola: number = 0;
+                    // parabola = 0.001 * Math.pow(x,4) / 1000; // Create a parabola that goes up as x increases, this is to make the terrain more interesting
+                    positions[index + 2] = (fractalPerlinNoise(noise3d, x, y + flying, flying, octaves, persistence, lacunarity, scale) * (amplitude)) + parabola; // Update z value using custom fractal noise function
                 }
+                
             }
 
             // Mark the buffer as needing an update

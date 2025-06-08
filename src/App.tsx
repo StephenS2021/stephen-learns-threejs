@@ -2,26 +2,24 @@
 import ThreeTerrain from './sketches/ThreeTerrain'
 import ThreeRapierScene from './sketches/ThreeRapierScene'
 import './App.css'
-import ThreeEnvironmentScene from './sketches/ThreeEnvironmentScene'
+import stripTerrainSketch from './sketches/stripTerrainSketch'
+import P5Wrapper from './components/P5Wrapper'
+import BezierSketch from './sketches/BezierSketch'
 
 function App() {
 
   return (
     <>
       {/* Three.js canvas */}
+      {/* <P5Wrapper sketch={stripTerrainSketch}/> */}
+
       <ThreeTerrain />
-      {/* <ThreeRapierScene/> */}
-      {/* <ThreeEnvironmentScene/> */}
 
       {/* Centered text */}
-      {/*
-      * relative --- position the element relative to its normal position
-      * top-1/2 and left-1/2 --- position the element at 50% of the height and width of the parent (this centers the top-left corner of the element)
-      * transform -translate-x-1/2 -translate-y-1/2 --- moves the text back by 50% of its own height and width (to adjust for the fact mentioned above)
-      * z-10 --- sets the z-index to 10, making it appear above the ThreeTerrain canvas (which has a z-index of 0)
-      */}
-      <div className="relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-        {/* <p className="text-primary text-3xl">Stephen Spencer-Wong</p> */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-8 z-10 text-left">
+        <p className="text-primary text-3xl font-bold">Hi.</p>
+        <p className="text-3xl">My name is Stephen Spencer-Wong</p>
+        <p className="text-primary text-2xl mt-4">I graduated from NYU in 2025 with a degree in Computer Science.<br/></p>
       </div>
     </>
   )
